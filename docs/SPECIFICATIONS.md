@@ -1,15 +1,11 @@
-# ĐẶC TẢ NGHIỆP VỤ WEB QUẢN LÝ CÀ PHÊ (SPECIFICATIONS)
+# ĐẶC TẢ NGHIỆP VỤ - COFFEE SHOP MANAGEMENT SYSTEM
 
-## 1. THÔNG TIN DỰ ÁN
-* **Tên đề tài:** Hệ Thống Quản Lý Quán Cà Phê (Coffee Management System)
-* **Công nghệ:** Java 17/21, Spring Boot, Maven, HTML/CSS/JS
-* **URL chạy local:** `http://localhost:8080`
+## 1. URL CÁC MÀN HÌNH CHÍNH
+- Màn hình Đăng nhập: `/login`
+- Màn hình Đăng ký: `/register`
+- Màn hình Quản lý Sản phẩm / Menu: `/products`
 
-## 2. QUY TẮC NGHIỆP VỤ (BUSINESS RULES)
-* **Chức năng Đăng nhập:** Kiểm tra đúng tài khoản/mật khẩu -> chuyển hướng về trang chủ quản lý; sai -> báo lỗi.
-* **Chức năng Quản lý Thực đơn (CRUD):** 
-  * Thêm món mới: Tên sản phẩm (bắt buộc, không trùng), Giá bán (> 0).
-  * Xóa / Sửa: Cập nhật dữ liệu trực tiếp trên giao diện và danh sách thực đơn.
-* **Chức năng Bán hàng (POS) & Giảm giá:**
-  * Thêm món vào giỏ hàng và tính tổng tiền tự động.
-  * Hỗ trợ nhập mã giảm giá (Voucher `SOF309` giảm 20% tổng hóa đơn).
+## 2. RÀNG BUỘC VALIDATION DỮ LIỆU
+- **Tài khoản / Mật khẩu:** Độ dài từ 5 đến 20 ký tự, không chứa ký tự đặc biệt hoặc khoảng trắng ở tài khoản.
+- **Giá sản phẩm:** Giá bán phải lớn hơn 0 (`> 0`), bắt buộc nhập dạng số.
+- **Mã giảm giá (Voucher):** Nhập đúng mã `SOF309` để áp dụng giảm 20%.
