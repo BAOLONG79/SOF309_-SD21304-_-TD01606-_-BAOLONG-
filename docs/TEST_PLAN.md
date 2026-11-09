@@ -1,19 +1,13 @@
-# KẾ HOẠCH KIỂM THỬ (TEST PLAN)
+# Kế hoạch Kiểm thử - Coffee Shop Management System
 
-* **Dự án:** [Tên dự án Web cá nhân]
-* **Sinh viên:** [Họ và tên - MSSV]
+## 1. Mục tiêu kiểm thử
+- Đảm bảo hệ thống Web Quản lý Quán Cà Phê hoạt động ổn định trên môi trường Localhost (`http://localhost:8080`).
+- Xác thực các luồng nghiệp vụ cốt lõi: Đăng nhập, Thêm/Xóa thực đơn, tính tiền POS và áp dụng mã giảm giá không bị lỗi.
 
----
+## 2. Phạm vi kiểm thử (Scope)
+- **Kiểm thử giao diện & chức năng (Functional Testing):** Kiểm tra các form nhập liệu, nút bấm, bảng dữ liệu.
+- **Kiểm thử tự động (Automation/CI):** Kiểm thử thông qua GitHub Actions khi đẩy code lên repository.
 
-## 1. MỤC TIÊU KIỂM THỬ
-* Kiểm thử logic backend (Unit Test với JUnit 5 cho Controller).
-* Kiểm thử giao diện tự động (Automation UI Test với Selenium WebDriver).
-* Tích hợp kiểm thử tự động với GitHub Actions CI/CD.
-
-## 2. PHẠM VI KIỂM THỬ
-* **In-Scope:** Luồng Đăng ký, Đăng nhập, và thao tác CRUD trên giao diện.
-* **Out-of-Scope:** Kiểm thử hiệu năng (Performance Test), Bảo mật chuyên sâu.
-
-## 3. TIÊU CHÍ HOÀN THÀNH
-* 100% test script thực thi pass.
-* Pipeline GitHub Actions báo xanh (Success).
+## 3. Môi trường kiểm thử
+- **Trình duyệt:** Google Chrome, Microsoft Edge.
+- **Công cụ:** Java JDK 17/21, Maven, Spring Boot, Eclipse IDE[cite: 2].

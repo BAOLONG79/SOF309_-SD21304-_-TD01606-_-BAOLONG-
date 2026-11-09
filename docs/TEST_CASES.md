@@ -1,9 +1,9 @@
-# BỘ KỊCH BẢN KIỂM THỬ (TEST CASES)
+# Bộ Kịch bản Kiểm thử Chi tiết (TEST_CASES.md)
 
-| Test Case ID | Chức năng | Mô tả ca kiểm thử | Loại test (Pos/Neg) | Các bước thực hiện | Dữ liệu kiểm thử (Test Data) | Kết quả mong đợi | Trạng thái (Pass/Fail) |
-| :---: | :---: | :--- | :---: | :--- | :--- | :--- | :---: |
-| **TC_AUTH_01** | Login | Đăng nhập thành công với tài khoản đúng | Positive | 1. Nhập username<br>2. Nhập password<br>3. Bấm Đăng nhập | `admin` / `123456` | Chuyển hướng tới trang chủ | Pass |
-| **TC_AUTH_02** | Login | Đăng nhập thất bại khi để trống mật khẩu | Negative | 1. Nhập username<br>2. Bỏ trống password<br>3. Bấm Đăng nhập | `admin` / `""` | Báo lỗi "Mật khẩu không được để trống" | Pass |
-| **TC_CRUD_01** | CRUD | Thêm mới bản ghi thành công | Positive | 1. Mở form thêm mới<br>2. Điền thông tin hợp lệ<br>3. Bấm Lưu | Dữ liệu hợp lệ | Lưu thành công, dữ liệu hiển thị trên bảng | Pass |
-| **TC_CRUD_02** | CRUD | Thêm mới thất bại khi dữ liệu không hợp lệ | Negative | 1. Mở form thêm mới<br>2. Nhập sai định dạng/để trống<br>3. Bấm Lưu | Dữ liệu sai | Báo lỗi validation, không lưu vào DB | Pass |
-
+| STT | Chức năng | Mô tả Test Case | Dữ liệu đầu vào | Kết quả mong đợi |
+| :--- | :--- | :--- | :--- | :--- |
+| **TC01** | Đăng nhập | Đăng nhập với tài khoản hợp lệ | Username: `admin`, Password: `123` | Đăng nhập thành công, chuyển hướng vào trang chính. |
+| **TC02** | Đăng nhập | Đăng nhập với tài khoản sai | Username: `wrong`, Password: `wrong` | Hiển thị thông báo lỗi, từ chối đăng nhập. |
+| **TC03** | Quản lý Menu | Thêm món mới hợp lệ | Tên: `Cà phê sữa`, Giá: `25000` | Món mới xuất hiện trong danh sách thực đơn. |
+| **TC04** | Quản lý Menu | Thêm món với giá âm/bằng 0 | Tên: `Trà đá`, Giá: `-5000` | Hệ thống báo lỗi dữ liệu không hợp lệ. |
+| **TC05** | Bán hàng (POS) | Áp dụng mã giảm giá hợp lệ | Nhập mã voucher: `SOF309` | Tổng tiền được giảm chính xác 20%. |

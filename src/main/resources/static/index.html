@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Quản Lý Cà Phê - SOF309</title>
+    <style>
+        :root {
+            --primary-color: #6F4E37;
+            --secondary-color: #ECB176;
+            --bg-color: #F8F4E1;
+            --dark-color: #3C2A21;
+            --light-color: #ffffff;
+            --danger-color: #dc3545;
+            --success-color: #198754;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--dark-color); padding: 140px 20px 20px; }
+
+        #test-guide-header {
+            position: fixed; top: 0; left: 0; right: 0;
+            background: #2b2b2b; color: #fff; padding: 12px 20px; z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-size: 13px;
+        }
+        #test-guide-header h3 { color: var(--secondary-color); margin-bottom: 5px; font-size: 15px; }
+        .guide-code { background: #444; color: #00ff66; padding: 2px 6px; border-radius: 4px; font-family: monospace; }
+
+        nav {
+            background-color: var(--primary-color); padding: 15px 30px; display: flex;
+            justify-content: space-between; align-items: center; border-radius: 8px; margin-bottom: 25px;
+        }
+        nav .logo { color: var(--light-color); font-size: 22px; font-weight: bold; }
+        nav ul { display: flex; list-style: none; gap: 15px; }
+        nav ul li button {
+            background: transparent; border: none; color: var(--light-color); padding: 8px 16px;
+            cursor: pointer; font-size: 15px; border-radius: 5px; transition: 0.3s;
+        }
+        nav ul li button:hover, nav ul li button.active { background-color: var(--secondary-color); color: var(--dark-color); font-weight: bold; }
+
+        .tab-content { display: none; background: var(--light-color); padding: 30px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .tab-content.active { display: block; }
+        h2 { margin-bottom: 20px; color: var(--primary-color); border-bottom: 2px solid var(--secondary-color); padding-bottom: 8px; }
+
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 600; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
+        .error-message { color: var(--danger-color); font-size: 13px; margin-top: 4px; display: none; }
+        .success-message { color: var(--success-color); font-size: 13px; margin-top: 4px; display: none; }
+
+        button.btn { background-color: var(--primary-color); color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; }
+        button.btn:hover { background-color: var(--dark-color); }
+        button.btn-danger { background-color: var(--danger-color); }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        table th, table td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        table th { background-color: var(--secondary-color); color: var(--dark-color); }
+
+        .pos-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
+        .product-card { border: 1px solid #ddd; padding: 15px; border-radius: 8px; text-align: center; cursor: pointer; background: #fff; }
+        .cart-summary { background: #fdfaf5; padding: 15px; border-radius: 8px; border: 1px solid #eee; }
+    </style>
+</head>
+<body>
+
+    <div id="test-guide-header">
+        <h3>☕ SOF309 - Web Quản Lý Cà Phê (Eclipse Ready)</h3>
+        <p>Tài khoản Test: Username: <span class="guide-code">admin</span> | Password: <span class="guide-code">123456</span></p>
+        <p>Elements: Login (<span class="guide-code">data-testid="input-username"</span>), Menu (<span class="guide-code">data-testid="input-menu-name"</span>), POS (<span class="guide-code">data-testid="btn-checkout"</span>)</p>
+    </div>
+
+    <nav>
+        <div class="logo">☕ Poly Coffee System</div>
+        <ul>
+            <li><button id="nav-login" class="active" onclick="showTab('tab-login')">Đăng Nhập</button></li>
+            <li><button id="nav-menu" onclick="showTab('tab-menu')">Quản Lý Menu</button></li>
+            <li><button id="nav-pos" onclick="showTab('tab-pos')">Bán Hàng (POS)</button></li>
+            <li><button id="nav-report" onclick="showTab('tab-report')">Báo Cáo</button></li>
+        </ul>
+    </nav>
+
+    <!-- Tab 1: Đăng nhập -->
+    <div id="tab-login" class="tab-content active">
+        <h2>Đăng Nhập Hệ Thống</h2>
+        <form id="login-form" onsubmit="event.preventDefault(); handleLogin();" style="max-width: 400px;">
+            <div class="form-group">
+                <label for="login-username">Tên đăng nhập</label>
+                <input type="text" id="login-username" data-testid="input-username" placeholder="Nhập tên đăng nhập (admin)">
+                <div id="err-username" class="error-message" data-testid="err-username">Vui lòng nhập tên đăng nhập!</div>
+            </div>
+            <div class="form-group">
+                <label for="login-password">Mật khẩu</label>
+                <input type="password" id="login-password" data-testid="input-password" placeholder="Nhập mật khẩu (123456)">
+                <div id="err-password" class="error-message" data-testid="err-password">Vui lòng nhập mật khẩu!</div>
+            </div>
+            <div id="login-global-err" class="error-message" data-testid="err-global" style="margin-bottom:10px;">Tài khoản hoặc mật khẩu không chính xác!</div>
+            <div id="login-success-msg" class="success-message" data-testid="msg-login-success" style="margin-bottom:10px;">Đăng nhập thành công!</div>
+            <button type="submit" id="btn-login-submit" data-testid="btn-login" class="btn">Đăng Nhập</button>
+        </form>
+    </div>
+
+    <!-- Tab 2: Quản lý Menu -->
+    <div id="tab-menu" class="tab-content">
+        <h2>Quản Lý Thực Đơn</h2>
+        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px;">
+            <form id="menu-form" onsubmit="event.preventDefault(); saveMenuItem();">
+                <div class="form-group">
+                    <label for="menu-id">Mã Món</label>
+                    <input type="text" id="menu-id" data-testid="input-menu-id" placeholder="VD: CF01">
+                    <div id="err-menu-id" class="error-message" data-testid="err-menu-id">Mã món không được để trống!</div>
+                </div>
+                <div class="form-group">
+                    <label for="menu-name">Tên Món</label>
+                    <input type="text" id="menu-name" data-testid="input-menu-name" placeholder="VD: Cà phê sữa đá">
+                    <div id="err-menu-name" class="error-message" data-testid="err-menu-name">Tên món không được để trống!</div>
+                </div>
+                <div class="form-group">
+                    <label for="menu-price">Giá (VNĐ)</label>
+                    <input type="number" id="menu-price" data-testid="input-menu-price" placeholder="VD: 25000">
+                    <div id="err-menu-price" class="error-message" data-testid="err-menu-price">Giá phải lớn hơn 0!</div>
+                </div>
+                <div id="menu-msg-success" class="success-message" data-testid="msg-menu-success" style="margin-bottom: 10px;">Đã lưu món thành công!</div>
+                <button type="submit" id="btn-save-menu" data-testid="btn-save-item" class="btn">Lưu Món</button>
+            </form>
+
+            <div>
+                <h3>Danh Sách Thực Đơn</h3>
+                <table id="menu-table" data-testid="table-menu">
+                    <thead>
+                        <tr>
+                            <th>Mã Món</th>
+                            <th>Tên Món</th>
+                            <th>Giá (VNĐ)</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="menu-list-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab 3: POS -->
+    <div id="tab-pos" class="tab-content">
+        <h2>Màn Hình Bán Hàng (POS)</h2>
+        <div class="pos-grid">
+            <div>
+                <h3>Chọn Món</h3>
+                <div class="product-grid" id="pos-product-list"></div>
+            </div>
+            <div class="cart-summary">
+                <h3>Hóa Đơn</h3>
+                <table>
+                    <thead>
+                        <tr><th>Tên</th><th>SL</th><th>Tổng</th></tr>
+                    </thead>
+                    <tbody id="cart-body"></tbody>
+                </table>
+                <hr style="margin: 15px 0;">
+                <div class="form-group">
+                    <label for="coupon-code">Mã Giảm Giá</label>
+                    <input type="text" id="coupon-code" data-testid="input-coupon" placeholder="Nhập SOF309 (Giảm 20%)">
+                </div>
+                <p><strong>Tổng tiền:</strong> <span id="cart-total" data-testid="cart-total-amount">0</span> VNĐ</p>
+                <div id="pos-msg-success" class="success-message" data-testid="msg-pos-success" style="margin: 10px 0;">Thanh toán thành công!</div>
+                <button class="btn" id="btn-checkout" data-testid="btn-checkout" onclick="handleCheckout()" style="width: 100%; margin-top: 10px;">Thanh Toán</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab 4: Báo cáo -->
+    <div id="tab-report" class="tab-content">
+        <h2>Báo Cáo Doanh Thu</h2>
+        <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+            <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; flex: 1;">
+                <h4>Tổng Đơn Hàng</h4>
+                <p style="font-size: 24px; font-weight: bold;" id="report-total-orders" data-testid="report-total-orders">0</p>
+            </div>
+            <div style="background: #e8f5e9; padding: 20px; border-radius: 8px; flex: 1;">
+                <h4>Tổng Doanh Thu</h4>
+                <p style="font-size: 24px; font-weight: bold;" id="report-total-revenue" data-testid="report-total-revenue">0 VNĐ</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let menuItems = [
+            { id: 'CF01', name: 'Cà phê Đen', price: 20000 },
+            { id: 'CF02', name: 'Cà phê Sữa', price: 25000 },
+            { id: 'CF03', name: 'Bạc Xỉu', price: 29000 },
+            { id: 'TEA01', name: 'Trà Đào Cam Sả', price: 35000 }
+        ];
+        let cart = [];
+        let totalOrders = 0;
+        let totalRevenue = 0;
+
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('nav ul li button').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            const btnMap = { 'tab-login': 'nav-login', 'tab-menu': 'nav-menu', 'tab-pos': 'nav-pos', 'tab-report': 'nav-report' };
+            document.getElementById(btnMap[tabId]).classList.add('active');
+        }
+
+        function handleLogin() {
+            const user = document.getElementById('login-username').value.trim();
+            const pass = document.getElementById('login-password').value.trim();
+            let valid = true;
+            document.getElementById('err-username').style.display = 'none';
+            document.getElementById('err-password').style.display = 'none';
+            document.getElementById('login-global-err').style.display = 'none';
+            document.getElementById('login-success-msg').style.display = 'none';
+
+            if (!user) { document.getElementById('err-username').style.display = 'block'; valid = false; }
+            if (!pass) { document.getElementById('err-password').style.display = 'block'; valid = false; }
+
+            if (valid) {
+                if (user === 'admin' && pass === '123456') {
+                    document.getElementById('login-success-msg').style.display = 'block';
+                } else {
+                    document.getElementById('login-global-err').style.display = 'block';
+                }
+            }
+        }
+
+        function renderMenu() {
+            const tbody = document.getElementById('menu-list-body');
+            tbody.innerHTML = '';
+            menuItems.forEach(item => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${item.id}</td>
+                        <td>${item.name}</td>
+                        <td>${item.price.toLocaleString()}</td>
+                        <td><button class="btn btn-danger" onclick="deleteMenuItem('${item.id}')" data-testid="btn-delete-${item.id}">Xóa</button></td>
+                    </tr>`;
+            });
+            renderPosProducts();
+        }
+
+        function saveMenuItem() {
+            const id = document.getElementById('menu-id').value.trim();
+            const name = document.getElementById('menu-name').value.trim();
+            const price = parseFloat(document.getElementById('menu-price').value);
+            let valid = true;
+
+            document.getElementById('err-menu-id').style.display = 'none';
+            document.getElementById('err-menu-name').style.display = 'none';
+            document.getElementById('err-menu-price').style.display = 'none';
+            document.getElementById('menu-msg-success').style.display = 'none';
+
+            if (!id) { document.getElementById('err-menu-id').style.display = 'block'; valid = false; }
+            if (!name) { document.getElementById('err-menu-name').style.display = 'block'; valid = false; }
+            if (isNaN(price) || price <= 0) { document.getElementById('err-menu-price').style.display = 'block'; valid = false; }
+
+            if (valid) {
+                const idx = menuItems.findIndex(i => i.id === id);
+                if (idx >= 0) menuItems[idx] = { id, name, price };
+                else menuItems.push({ id, name, price });
+                renderMenu();
+                document.getElementById('menu-msg-success').style.display = 'block';
+                document.getElementById('menu-form').reset();
+            }
+        }
+
+        function deleteMenuItem(id) {
+            menuItems = menuItems.filter(i => i.id !== id);
+            renderMenu();
+        }
+
+        function renderPosProducts() {
+            const container = document.getElementById('pos-product-list');
+            container.innerHTML = '';
+            menuItems.forEach(item => {
+                container.innerHTML += `
+                    <div class="product-card" onclick="addToCart('${item.id}')" data-testid="pos-card-${item.id}">
+                        <h4>${item.name}</h4>
+                        <p style="color: var(--primary-color); font-weight: bold; margin-top:5px;">${item.price.toLocaleString()} đ</p>
+                    </div>`;
+            });
+        }
+
+        function addToCart(id) {
+            const item = menuItems.find(i => i.id === id);
+            if (!item) return;
+            const cartItem = cart.find(c => c.id === id);
+            if (cartItem) cartItem.qty += 1;
+            else cart.push({ ...item, qty: 1 });
+            renderCart();
+        }
+
+        function renderCart() {
+            const tbody = document.getElementById('cart-body');
+            tbody.innerHTML = '';
+            let subtotal = 0;
+            cart.forEach(c => {
+                const itemTotal = c.price * c.qty;
+                subtotal += itemTotal;
+                tbody.innerHTML += `<tr><td>${c.name}</td><td>${c.qty}</td><td>${itemTotal.toLocaleString()}</td></tr>`;
+            });
+            const coupon = document.getElementById('coupon-code').value.trim();
+            if (coupon === 'SOF309') subtotal *= 0.8;
+            document.getElementById('cart-total').innerText = subtotal.toLocaleString();
+        }
+
+        document.getElementById('coupon-code').addEventListener('input', renderCart);
+
+        function handleCheckout() {
+            if (cart.length === 0) return;
+            let finalTotal = 0;
+            cart.forEach(c => finalTotal += c.price * c.qty);
+            const coupon = document.getElementById('coupon-code').value.trim();
+            if (coupon === 'SOF309') finalTotal *= 0.8;
+
+            totalOrders += 1;
+            totalRevenue += finalTotal;
+            document.getElementById('report-total-orders').innerText = totalOrders;
+            document.getElementById('report-total-revenue').innerText = totalRevenue.toLocaleString() + ' VNĐ';
+            cart = [];
+            renderCart();
+            document.getElementById('pos-msg-success').style.display = 'block';
+            setTimeout(() => { document.getElementById('pos-msg-success').style.display = 'none'; }, 3000);
+        }
+
+        renderMenu();
+    </script>
+</body>
+</html>
